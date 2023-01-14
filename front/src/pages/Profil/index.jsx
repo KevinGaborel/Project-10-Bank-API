@@ -1,8 +1,13 @@
 import styles from "./Profil.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getUserProfil } from "../../services/api";
 
 const Profil = () => {
   const [ isForm, setIsForm ] = useState(false);
+
+  useEffect(() => {
+    getUserProfil();
+  }, []);
 
   const editNameElt = (
     <form action="">
