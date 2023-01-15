@@ -11,6 +11,8 @@ const Login = () => {
     password: '',
   });
   const [ token, setToken ] = useState();
+  const [ error, setErreur ] = useState();
+
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -27,13 +29,17 @@ const Login = () => {
   useEffect(() => {
     const getFunctionData = async () => {
       const data = await getLogin(form);
-      console.log(data);
-      setToken(data.body.token);
+      if (data.status === 200){
+        setToken(data.body.token);
+      }else if (data.status === 400){
+        setErreur('Invalid Fields');
+      } else if (data.status === 500){
+        setErreur('Internal Server Error');
+      }
     }
 
     if (form.email && form.password){
       getFunctionData();
-      console.log(token);
       // a conserver dans un state globale redux
       if (token){
         localStorage.setItem('userToken', token);
@@ -48,6 +54,7 @@ const Login = () => {
     <section className={styles.signInContent} >
       <FontAwesomeIcon icon={faUserCircle} className={`${styles.signInIcon} ${styles.fa}`} />
       <h1>Sign In</h1>
+      {error && <span className={styles.error} >{error}</span>}
       <form onSubmit={(e) => handleSubmit(e)}>
         <div className={styles.inputWrapper}>
           <label htmlFor="username">Username</label>

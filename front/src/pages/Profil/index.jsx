@@ -4,16 +4,30 @@ import { getUserProfil } from "../../services/api";
 
 const Profil = () => {
   const [ isForm, setIsForm ] = useState(false);
+  const [ user, setUser ] = useState({
+    createdAt: "",
+    email: "",
+    firstName: "",
+    id: "",
+    lastName: "",
+    updatedAt: ""
+  });
 
   useEffect(() => {
-    getUserProfil();
+    const getFunctionData = async () => {
+      const data = await getUserProfil();
+      console.log(data.body);
+      setUser(data.body);
+    }
+
+    getFunctionData();
   }, []);
 
   const editNameElt = (
     <form action="">
       <div>
-        <input type="text" name="firstName" id="firstName" placeholder=""/>
-        <input type="text" name="name" id="name" placeholder="" />
+        <input type="text" name="firstName" id="firstName" placeholder={user.firstName}/>
+        <input type="text" name="name" id="name" placeholder={user.lastName} />
       </div>
       <div>
         <button className={styles.btnHeader} type="submit">Save</button>
@@ -26,7 +40,7 @@ const Profil = () => {
     <main className={`${styles.main} ${styles.bgDark}`}>
       <div className={styles.header}>
         <h1>Welcome back<br />
-          {isForm ? '' : 'Tony Jarvis!'}
+          {isForm ? '' : `${user.firstName} ${user.lastName}`}
         </h1>
         {isForm ? 
           editNameElt :

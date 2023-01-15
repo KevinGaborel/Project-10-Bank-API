@@ -3,26 +3,41 @@ import axios from "axios";
 const baseUrl = "http://localhost:3001/api/v1/user";
 
 export const getLogin = async (obj) => {
-  const result = await axios.post(`${baseUrl}/login`, obj);
-  try {
-    return result.data;
-  } catch (error) {
-    console.error(error);
-  }
+  return axios.post(`${baseUrl}/login`, obj)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    })
 };
 
 
 export const getUserProfil = async () => {
   const token = localStorage.getItem('userToken');
   axios.defaults.headers.post['Authorization'] = `Bearer ${token}`;
-  console.log(token);
 
-  const result = await axios.post(`${baseUrl}/profile`);
-
-  console.log(result);
-  try {
-    return result.data;
-  } catch (error) {
-    console.error(error);
-  }
+  return axios.post(`${baseUrl}/profile`)
+    .then((response) => {
+      console.log(response);
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+  })
 };
+
+
+export const updateUserProfil = async (obj) => {
+  const token = localStorage.getItem('userToken');
+  axios.defaults.headers.put['Authorization'] = `Bearer ${token}`;
+
+  return axios.put(`${baseUrl}/profile`, obj)
+  .then((response) => {
+    console.log(response);
+    return response.data;
+  })
+  .catch((error) => {
+    return error.response.data;
+})
+}

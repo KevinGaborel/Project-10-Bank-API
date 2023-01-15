@@ -27,6 +27,11 @@
   text-align: left;
   margin-bottom: 1rem;
 }
+.error{
+  color: red;
+  font-size: 1rem;
+  font-weight: 700;
+}
 .inputWrapper label {
   font-weight: bold;
 }
