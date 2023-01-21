@@ -43,7 +43,7 @@ const Login = () => {
       // a conserver dans un state globale redux
       if (token){
         localStorage.setItem('userToken', token);
-        navigate("/profil");
+        navigate("/profile");
       }
     }
   }, [form, token]);

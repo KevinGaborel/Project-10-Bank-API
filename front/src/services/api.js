@@ -19,7 +19,6 @@ export const getUserProfil = async () => {
 
   return axios.post(`${baseUrl}/profile`)
     .then((response) => {
-      console.log(response);
       return response.data;
     })
     .catch((error) => {
@@ -34,7 +33,6 @@ export const updateUserProfil = async (obj) => {
 
   return axios.put(`${baseUrl}/profile`, obj)
   .then((response) => {
-    console.log(response);
     return response.data;
   })
   .catch((error) => {

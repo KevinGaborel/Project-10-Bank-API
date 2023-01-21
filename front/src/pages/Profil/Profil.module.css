@@ -51,6 +51,14 @@
   font-weight: bold;
   padding: 10px;
 }
+.success{
+  color: #00bc77;
+  font-weight: 700;
+}
+.error{
+  color: red;
+  font-weight: 700;
+}
 
 .account {
   display: flex;

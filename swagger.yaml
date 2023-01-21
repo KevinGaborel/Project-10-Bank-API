@@ -110,6 +110,99 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+  /transactions:
+    post:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Transactions API
+      description: API for fetching a user transactions
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transactions retrieved successully
+          schema:
+            $ref: '#/definitions/Transactions'
+        '400':
+          description: No account
+        '500':
+          description: Internal Server Error
+  /transactions/{idAccount}:
+    post:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Transactions API
+      description: API for fetching a transactions for 1 account by id
+      parameters:
+        - in: path
+          name: idAccount
+          type: number
+          description: id of the transactions account to view
+          required: true
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transactions retrieved successully
+          schema:
+            $ref: '#/definitions/TransactionsAccount'
+        '400':
+          description: No account
+        '500':
+          description: Internal Server Error
+  /transactions/{idAccount}/{idTransaction}:
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Transactions API
+      description: API for updating a transaction
+      parameters:
+        - in: path
+          name: idAccount
+          type: number
+          description: id of the transactions account to update
+          required: true
+        - in: path
+          name: idTransaction
+          type: number
+          description: id of the transaction to update
+          required: true
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+        - in: body
+          name: body
+          description: Update transaction attributes
+          required: true
+          schema:
+            $ref: '#/definitions/TransactionObject'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transactions changed successully
+          schema:
+            $ref: '#/definitions/TransactionsAccount'
+        '400':
+          description: No account
+        '500':
+          description: Internal Server Error
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -163,4 +256,95 @@ definitions:
       firstName:
         type: string
       lastName:
+        type: string
+  Transactions:
+    type: object
+    properties:
+      status:
+        type: number
+      checking:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: number
+            accountName: 
+              type: string
+            value:
+              type: number
+      savings:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: number
+            accountName: 
+              type: string
+            value:
+              type: number
+      creditCard:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: number
+            accountName: 
+              type: string
+            value:
+              type: number
+  TransactionsAccount:
+    type: object
+    properties:
+      status:
+        type: number
+      account:
+        type: object
+        properties:
+          accountName:
+            type: string
+          value:
+            type: number
+          id:
+            type: number
+      transactions:
+        type: array
+        items:
+          type: object
+          properties:
+            transactionId:
+              type: number
+            date: 
+              type: string
+            description:
+              type: string
+            amount:
+              type: number
+            balance:
+              type: number
+            transactionType: 
+              type: string
+            category:
+              type: string
+            notes:
+              type:
+                string
+  TransactionObject:
+    type: object
+    properties:
+      date: 
+        type: string
+      description:
+        type: string
+      amount:
+        type: number
+      balance:
+        type: number
+      transactionType: 
+        type: string
+      category:
+        type: string
+      notes:
         type: string

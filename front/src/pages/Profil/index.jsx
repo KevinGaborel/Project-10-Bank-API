@@ -1,9 +1,10 @@
 import styles from "./Profil.module.css";
 import { useState, useEffect } from "react";
-import { getUserProfil } from "../../services/api";
+import { getUserProfil, updateUserProfil } from "../../services/api";
 
 const Profil = () => {
   const [ isForm, setIsForm ] = useState(false);
+  const [ message, setMessage ] = useState();
   const [ user, setUser ] = useState({
     createdAt: "",
     email: "",
@@ -13,25 +14,59 @@ const Profil = () => {
     updatedAt: ""
   });
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let firstNameValue = e.target.querySelector('#firstName').value;
+    let lastNameValue = e.target.querySelector('#name').value;
+
+    if(firstNameValue === ''){
+      firstNameValue = user.firstName;
+    }
+    if (lastNameValue === '') {
+      lastNameValue = user.lastName;
+    }
+
+    const response = await updateUserProfil({firstName: firstNameValue, lastName: lastNameValue});
+
+    if (response.status === 200){
+      setUser({...user, 
+        createdAt: response.body.createdAt,
+        email: response.body.email,
+        firstName: response.body.firstName,
+        lastName: response.body.lastName
+      })
+  
+      setMessage(<span className={styles.success} >User profile retrieved successully</span>);
+    }
+  
+    if (response.status === 400){
+      setMessage(<span className={styles.error} >Invalid Fields</span>);
+    }
+    if (response.status === 500){
+      setMessage(<span className={styles.error} >Internal Server Error</span>);
+    }
+
+  }
+
   useEffect(() => {
     const getFunctionData = async () => {
       const data = await getUserProfil();
-      console.log(data.body);
       setUser(data.body);
     }
 
     getFunctionData();
   }, []);
 
+
   const editNameElt = (
-    <form action="">
+    <form onSubmit={(e) => handleSubmit(e)}>
       <div>
         <input type="text" name="firstName" id="firstName" placeholder={user.firstName}/>
-        <input type="text" name="name" id="name" placeholder={user.lastName} />
+        <input type="text" name="name" id="name" placeholder={user.lastName}/>
       </div>
       <div>
         <button className={styles.btnHeader} type="submit">Save</button>
-        <button className={styles.btnHeader} >Cancel</button>
+        <button className={styles.btnHeader} onClick={() => [setIsForm(false), setMessage('')] } >Cancel</button>
       </div>
     </form>
   );
@@ -39,12 +74,18 @@ const Profil = () => {
   return (
     <main className={`${styles.main} ${styles.bgDark}`}>
       <div className={styles.header}>
+
         <h1>Welcome back<br />
           {isForm ? '' : `${user.firstName} ${user.lastName}`}
         </h1>
+
         {isForm ? 
           editNameElt :
-          <button className={styles.editButton} onClick={() => setIsForm(true)} >Edit Name</button>}
+          <button className={styles.editButton} onClick={() => setIsForm(true)} >Edit Name</button>
+        }
+
+        {message && message}
+
       </div>
       <h2 className={styles.srOnly}>Accounts</h2>
       <section className={styles.account}>
