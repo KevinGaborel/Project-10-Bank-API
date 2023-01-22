@@ -164,6 +164,45 @@ paths:
         '500':
           description: Internal Server Error
   /transactions/{idAccount}/{idTransaction}:
+    post:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Transactions API
+      description: API for add infos a transaction
+      parameters:
+        - in: path
+          name: idAccount
+          type: number
+          description: id of the transactions account
+          required: true
+        - in: path
+          name: idTransaction
+          type: number
+          description: id of the transaction to add infos
+          required: true
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+        - in: body
+          name: body
+          description: add transaction attributes
+          required: true
+          schema:
+            $ref: '#/definitions/TransactionObject'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transactions add infos successully
+          schema:
+            $ref: '#/definitions/TransactionsAccount'
+        '400':
+          description: No account
+        '500':
+          description: Internal Server Error
     put:
       security:
         - Bearer: []
@@ -197,6 +236,45 @@ paths:
       responses:
         '200':
           description: User transactions changed successully
+          schema:
+            $ref: '#/definitions/TransactionsAccount'
+        '400':
+          description: No account
+        '500':
+          description: Internal Server Error
+  /transactions/{idAccount}/{idTransaction}/{attribute}:
+    delete:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Transactions API
+      description: API for delete infos a transaction
+      parameters:
+        - in: path
+          name: idAccount
+          type: number
+          description: id of the transactions account
+          required: true
+        - in: path
+          name: idTransaction
+          type: number
+          description: id of the transaction to delete infos
+          required: true
+        - in: path
+          name: attribute
+          type: string
+          description: transaction attribute to delete
+          required: true
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transactions delete infos successully
           schema:
             $ref: '#/definitions/TransactionsAccount'
         '400':
@@ -334,16 +412,6 @@ definitions:
   TransactionObject:
     type: object
     properties:
-      date: 
-        type: string
-      description:
-        type: string
-      amount:
-        type: number
-      balance:
-        type: number
-      transactionType: 
-        type: string
       category:
         type: string
       notes:
