@@ -3,17 +3,16 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { add, update } from '../../features/user'
 import { createMessage, deleteMessage } from "../../features/message";
+import { openForm } from "../../features/formProfil";
 import { getUserProfil, updateUserProfil } from "../../services/api";
 
 const Profil = () => {
-  const [ isForm, setIsForm ] = useState(false);
-
+  const form = useSelector((state) => state.form);
   const message = useSelector((state) => state.message);
   const user = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
-
-  console.log(user, message);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +37,6 @@ const Profil = () => {
       }))
   
       dispatch(createMessage({style: styles.success, value: "User profile retrieved successully" }));
-      console.log(message);
     }
   
     if (response.status === 400){
@@ -68,7 +66,7 @@ const Profil = () => {
       </div>
       <div>
         <button className={styles.btnHeader} type="submit">Save</button>
-        <button className={styles.btnHeader} onClick={() => [setIsForm(false), dispatch(deleteMessage())] } >Cancel</button>
+        <button className={styles.btnHeader} onClick={() => [dispatch(openForm(false)), dispatch(deleteMessage())] } >Cancel</button>
       </div>
     </form>
   );
@@ -78,12 +76,12 @@ const Profil = () => {
       <div className={styles.header}>
 
         <h1>Welcome back<br />
-          {isForm ? '' : `${user.firstName} ${user.lastName}`}
+          {form.isOpen ? '' : `${user.firstName} ${user.lastName}`}
         </h1>
 
-        {isForm ? 
+        {form.isOpen ? 
           editNameElt :
-          <button className={styles.editButton} onClick={() => setIsForm(true)} >Edit Name</button>
+          <button className={styles.editButton} onClick={() => dispatch(openForm(true))} >Edit Name</button>
         }
 
         {message && <span className={message.style} >{ message.value }</span>}
