@@ -1,18 +1,19 @@
 import styles from "./Profil.module.css";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux'
+import { add, update } from '../../features/user'
+import { createMessage, deleteMessage } from "../../features/message";
 import { getUserProfil, updateUserProfil } from "../../services/api";
 
 const Profil = () => {
   const [ isForm, setIsForm ] = useState(false);
-  const [ message, setMessage ] = useState();
-  const [ user, setUser ] = useState({
-    createdAt: "",
-    email: "",
-    firstName: "",
-    id: "",
-    lastName: "",
-    updatedAt: ""
-  });
+
+  const message = useSelector((state) => state.message);
+  const user = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
+  console.log(user, message);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,21 +30,22 @@ const Profil = () => {
     const response = await updateUserProfil({firstName: firstNameValue, lastName: lastNameValue});
 
     if (response.status === 200){
-      setUser({...user, 
+      dispatch(update({
         createdAt: response.body.createdAt,
         email: response.body.email,
         firstName: response.body.firstName,
         lastName: response.body.lastName
-      })
+      }))
   
-      setMessage(<span className={styles.success} >User profile retrieved successully</span>);
+      dispatch(createMessage({style: styles.success, value: "User profile retrieved successully" }));
+      console.log(message);
     }
   
     if (response.status === 400){
-      setMessage(<span className={styles.error} >Invalid Fields</span>);
+      dispatch(createMessage({style: styles.error, value: "Invalid Fields"}));
     }
     if (response.status === 500){
-      setMessage(<span className={styles.error} >Internal Server Error</span>);
+      dispatch(createMessage({style: styles.error, value: "Internal Server Error"}));
     }
 
   }
@@ -51,7 +53,7 @@ const Profil = () => {
   useEffect(() => {
     const getFunctionData = async () => {
       const data = await getUserProfil();
-      setUser(data.body);
+      dispatch(add(data.body));
     }
 
     getFunctionData();
@@ -66,7 +68,7 @@ const Profil = () => {
       </div>
       <div>
         <button className={styles.btnHeader} type="submit">Save</button>
-        <button className={styles.btnHeader} onClick={() => [setIsForm(false), setMessage('')] } >Cancel</button>
+        <button className={styles.btnHeader} onClick={() => [setIsForm(false), dispatch(deleteMessage())] } >Cancel</button>
       </div>
     </form>
   );
@@ -84,7 +86,7 @@ const Profil = () => {
           <button className={styles.editButton} onClick={() => setIsForm(true)} >Edit Name</button>
         }
 
-        {message && message}
+        {message && <span className={message.style} >{ message.value }</span>}
 
       </div>
       <h2 className={styles.srOnly}>Accounts</h2>
