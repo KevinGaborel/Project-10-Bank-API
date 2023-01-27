@@ -2,15 +2,20 @@ import styles from "./Login.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons'
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux'
 import { getLogin } from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { addToken } from "../../features/token";
 
 const Login = () => {
   const [ form, setForm ] = useState({
     email: '',
     password: '',
   });
-  const [ token, setToken ] = useState();
+
+  const token = useSelector((state) => state.token);
+  const dispatch = useDispatch();
+
   const [ error, setErreur ] = useState();
 
   const navigate = useNavigate();
@@ -30,7 +35,7 @@ const Login = () => {
     const getFunctionData = async () => {
       const data = await getLogin(form);
       if (data.status === 200){
-        setToken(data.body.token);
+        dispatch(addToken(data.body.token));
       }else if (data.status === 400){
         setErreur('Invalid Fields');
       } else if (data.status === 500){
@@ -40,9 +45,8 @@ const Login = () => {
 
     if (form.email && form.password){
       getFunctionData();
-      // a conserver dans un state globale redux
-      if (token){
-        localStorage.setItem('userToken', token);
+      if (token.value){
+        sessionStorage.setItem('userToken', token.value);
         navigate("/profile");
       }
     }

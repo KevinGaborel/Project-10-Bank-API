@@ -13,6 +13,6 @@ export const formProfilSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { openForm, deleteMessage } = formProfilSlice.actions
+export const { openForm } = formProfilSlice.actions
 
 export default formProfilSlice.reducer

@@ -1,6 +1,7 @@
 import styles from "./Profil.module.css";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from "react-router-dom";
 import { add, update } from '../../features/user'
 import { createMessage, deleteMessage } from "../../features/message";
 import { openForm } from "../../features/formProfil";
@@ -12,7 +13,9 @@ const Profil = () => {
   const user = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
-  
+
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,6 +32,8 @@ const Profil = () => {
     const response = await updateUserProfil({firstName: firstNameValue, lastName: lastNameValue});
 
     if (response.status === 200){
+      sessionStorage.removeItem('userName');
+      sessionStorage.setItem('userName', response.body.firstName);
       dispatch(update({
         createdAt: response.body.createdAt,
         email: response.body.email,
@@ -51,7 +56,12 @@ const Profil = () => {
   useEffect(() => {
     const getFunctionData = async () => {
       const data = await getUserProfil();
-      dispatch(add(data.body));
+      if (data.status === 200){
+        sessionStorage.setItem('userName', data.body.firstName);
+        dispatch(add(data.body));
+      } else if (data.status === 401 || data.status === 500){
+        navigate("/");
+      }
     }
 
     getFunctionData();

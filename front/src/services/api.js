@@ -14,7 +14,7 @@ export const getLogin = async (obj) => {
 
 
 export const getUserProfil = async () => {
-  const token = localStorage.getItem('userToken');
+  const token = sessionStorage.getItem('userToken');
   axios.defaults.headers.post['Authorization'] = `Bearer ${token}`;
 
   return axios.post(`${baseUrl}/profile`)
@@ -28,7 +28,7 @@ export const getUserProfil = async () => {
 
 
 export const updateUserProfil = async (obj) => {
-  const token = localStorage.getItem('userToken');
+  const token = sessionStorage.getItem('userToken');
   axios.defaults.headers.put['Authorization'] = `Bearer ${token}`;
 
   return axios.put(`${baseUrl}/profile`, obj)
