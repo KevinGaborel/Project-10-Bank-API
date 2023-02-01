@@ -13,8 +13,7 @@ export const getLogin = async (obj) => {
 };
 
 
-export const getUserProfil = async () => {
-  const token = sessionStorage.getItem('userToken');
+export const getUserProfil = async (token) => {
   axios.defaults.headers.post['Authorization'] = `Bearer ${token}`;
 
   return axios.post(`${baseUrl}/profile`)
@@ -27,8 +26,7 @@ export const getUserProfil = async () => {
 };
 
 
-export const updateUserProfil = async (obj) => {
-  const token = sessionStorage.getItem('userToken');
+export const updateUserProfil = async (obj, token) => {
   axios.defaults.headers.put['Authorization'] = `Bearer ${token}`;
 
   return axios.put(`${baseUrl}/profile`, obj)

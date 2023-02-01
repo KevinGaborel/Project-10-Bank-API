@@ -9,10 +9,13 @@ export const tokenSlice = createSlice({
     addToken: (state, action) => {
       state.value = action.payload;
     },
+    deleteToken: (state) => {
+      state.value = '';
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { addToken } = tokenSlice.actions
+export const { addToken, deleteToken } = tokenSlice.actions
 
 export default tokenSlice.reducer

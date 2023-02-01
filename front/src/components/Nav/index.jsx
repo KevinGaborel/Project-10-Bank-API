@@ -3,18 +3,15 @@ import argentBankLogo from "../../assets/img/argentBankLogo.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { deleteToken } from "../../features/token";
+
 
 const Nav = () => {
   const user = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
 
-  const userToken = sessionStorage.getItem('userToken');
-  const userName = sessionStorage.getItem('userName');
-
-  const deleteToken = () => {
-    sessionStorage.removeItem('userToken');
-    sessionStorage.removeItem('userName');
-  }
+  const dispatch = useDispatch();
 
   return(
     <nav className={styles.mainNav}>
@@ -27,13 +24,13 @@ const Nav = () => {
         <h1 className={styles.srOnly}>Argent Bank</h1>
       </Link>
       <div >
-        {userToken ? 
+        {token.value ? 
           <>
             <Link className={styles.mainNavItem} to={"./profile"} >
               <FontAwesomeIcon icon={faCircleUser} />
-              {`${userName} `}
+              {`${user.firstName} `}
             </Link>
-          <a className={styles.mainNavItem} href='/' onClick={() => deleteToken()} >
+          <a className={styles.mainNavItem} href='/' onClick={() => dispatch(deleteToken())} >
           <FontAwesomeIcon icon={faRightFromBracket} />
             {" Sign Out "}
           </a>

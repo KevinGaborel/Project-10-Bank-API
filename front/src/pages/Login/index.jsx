@@ -46,7 +46,7 @@ const Login = () => {
     if (form.email && form.password){
       getFunctionData();
       if (token.value){
-        sessionStorage.setItem('userToken', token.value);
+        //sessionStorage.setItem('userToken', token.value);
         navigate("/profile");
       }
     }

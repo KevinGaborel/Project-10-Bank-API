@@ -11,6 +11,7 @@ const Profil = () => {
   const form = useSelector((state) => state.form);
   const message = useSelector((state) => state.message);
   const user = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
 
   const dispatch = useDispatch();
 
@@ -29,11 +30,10 @@ const Profil = () => {
       lastNameValue = user.lastName;
     }
 
-    const response = await updateUserProfil({firstName: firstNameValue, lastName: lastNameValue});
+    const response = await updateUserProfil({firstName: firstNameValue, lastName: lastNameValue}, token.value);
 
     if (response.status === 200){
-      sessionStorage.removeItem('userName');
-      sessionStorage.setItem('userName', response.body.firstName);
+
       dispatch(update({
         createdAt: response.body.createdAt,
         email: response.body.email,
@@ -55,7 +55,7 @@ const Profil = () => {
 
   useEffect(() => {
     const getFunctionData = async () => {
-      const data = await getUserProfil();
+      const data = await getUserProfil(token.value);
       if (data.status === 200){
         sessionStorage.setItem('userName', data.body.firstName);
         dispatch(add(data.body));
