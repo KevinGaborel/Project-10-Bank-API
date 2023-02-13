@@ -12,11 +12,10 @@ const Login = () => {
     email: '',
     password: '',
   });
+  const [ error, setErreur ] = useState();
 
   const token = useSelector((state) => state.token);
   const dispatch = useDispatch();
-
-  const [ error, setErreur ] = useState();
 
   const navigate = useNavigate();
 
@@ -46,7 +45,6 @@ const Login = () => {
     if (form.email && form.password){
       getFunctionData();
       if (token.value){
-        //sessionStorage.setItem('userToken', token.value);
         navigate("/profile");
       }
     }

@@ -1,14 +1,13 @@
 import styles from "./Profil.module.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { add, update } from '../../features/user'
 import { createMessage, deleteMessage } from "../../features/message";
-import { openForm } from "../../features/formProfil";
 import { getUserProfil, updateUserProfil } from "../../services/api";
 
 const Profil = () => {
-  const form = useSelector((state) => state.form);
+  const [ isForm, setIsForm ] = useState(false);
   const message = useSelector((state) => state.message);
   const user = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -76,7 +75,7 @@ const Profil = () => {
       </div>
       <div>
         <button className={styles.btnHeader} type="submit">Save</button>
-        <button className={styles.btnHeader} onClick={() => [dispatch(openForm(false)), dispatch(deleteMessage())] } >Cancel</button>
+        <button className={styles.btnHeader} onClick={() => [setIsForm(false), dispatch(deleteMessage())] } >Cancel</button>
       </div>
     </form>
   );
@@ -86,12 +85,12 @@ const Profil = () => {
       <div className={styles.header}>
 
         <h1>Welcome back<br />
-          {form.isOpen ? '' : `${user.firstName} ${user.lastName}`}
+          {isForm ? '' : `${user.firstName} ${user.lastName}`}
         </h1>
 
-        {form.isOpen ? 
+        {isForm ? 
           editNameElt :
-          <button className={styles.editButton} onClick={() => dispatch(openForm(true))} >Edit Name</button>
+          <button className={styles.editButton} onClick={() => setIsForm(true)} >Edit Name</button>
         }
 
         {message && <span className={message.style} >{ message.value }</span>}
